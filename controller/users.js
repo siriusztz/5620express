@@ -49,3 +49,20 @@ module.exports.userSignout = function (req, res, next) {
     delete req.session.loginUser
     res.send("user logout successfully")
 }
+
+module.exports.getUserList =function(req, res, next){
+    var page = req.query.page
+    var pageSize=req.query.pageSize
+
+    if (page==0 || pageSize==0){
+        page=1
+        pageSize=10
+    }
+
+    User.find({type:0})
+    .skip((page-1)*pageSize)
+    .limit(pageSize)
+    .exec(function (err, data) {
+        res.send({list:data,total:(page*pageSize)})
+    });
+}
